@@ -1,0 +1,103 @@
+<h2> View Cart </h2>
+<script language="JavaScript">
+function submitForm()
+{
+    document.recalculate.submit();
+}
+</script>
+<form method="post" name="recalculate" action="[% c.uri_for(
+    c.controller('Cart').action_for('update')
+)  %]">
+
+<table width="540" id="hor-minimalist-a" border="0" cellspacing="0" cellpadding="0">
+<thead>
+  <tr>
+    <th scope="col">Remove</th> 
+    <th scope="col" width="80">SKU</th>
+    <th scope="col" width="450">Product Name</th>
+    <th scope="col" align="center">Quantity</th>
+    <th scope="col" width="50" align="center">Price</th>
+    <th scope="col" align="center">Total</th>
+  </tr>
+</thead>
+<tbody>
+[% total = 0%]
+[% subtotal = 0%]
+[% i = 0 %]
+[% FOREACH item IN cart_items %]
+[% subtotal = item.quantity * item.product.price %]
+[% total = total + subtotal %]
+[% i = i + 1 %]
+
+[% IF i % 2 %]
+  <tr class="row_a">
+[% ELSE %]
+  <tr class="row_b">
+[% END %]
+    <td>
+      <input type="checkbox" name="remove" 
+        onClick="window.location='[% 
+            c.uri_for(c.controller('Cart').action_for('remove_item'),[item.sku])
+         %]'" >
+    </td>
+    <td>[% item.sku %]</td>
+    <td>[% item.product.name %]</td>
+    <td align="center">
+      <input type="text" size="1" name="[% item.sku %]" value="[% item.quantity %]">
+    </td>
+    <td align="right">$[% item.product.price | format('%0.2f') %]</td>
+    <td align="right">$[% subtotal | format('%0.2f') %]</td>
+  </tr>
+[% END %]
+</tbody>
+<tfoot>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td colspan="2" align="right">SUBTOTAL</td>
+    <td align="right">$[% total | format('%0.2f') %]</td>
+</tfoor>
+</table>
+</form>
+<table width="500" id="hor-minimalist-a">
+<tr>
+    <td algin="center">
+    <br>
+      <input type="button" name="continue" value="Continue Shopping" 
+        onClick="window.location='[%
+          c.uri_for(c.controller('Store').action_for('index'))
+         %]'" >
+    <br>
+    <br>
+    </td>
+    <td align="center">
+    <br>
+      <input type="button" name="clear" value="Clear Cart"
+        onClick="window.location='[%
+            c.uri_for(c.controller('Cart').action_for('clear'))
+         %]'" >
+    <br>
+    <br>
+    </td>
+    <td align="center">
+    <br>
+      <input type="button" name="recalculate" value="Recalculate"
+        onClick="submitForm()" >
+    <br>
+    <br>
+    </td>
+    <td align="center">
+    <br>
+      <input type="button" name="clear" value="Checkout"
+        onClick="window.location='[%
+            c.uri_for(c.controller('Checkout').action_for('customer'))
+         %]'" >
+    <br>
+    <br>
+    </td>
+
+</tr>
+</table>
+ <br>
+<div class="clear br">&nbsp;</div>
+
